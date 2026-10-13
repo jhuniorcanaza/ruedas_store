@@ -17,6 +17,7 @@ let AutoDetail = class AutoDetail {
     carroceria;
     puertas;
     pasajeros;
+    cilindrada;
     autonomia;
     tamanoBateria;
     vehicle;
@@ -38,6 +39,10 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'int' }),
     __metadata("design:type", Number)
 ], AutoDetail.prototype, "pasajeros", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'int', nullable: true }),
+    __metadata("design:type", Object)
+], AutoDetail.prototype, "cilindrada", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'int', nullable: true }),
     __metadata("design:type", Object)

@@ -99,6 +99,15 @@ export class AuthService {
     }
   }
 
+  public async getActiveAgents(): Promise<User[]> {
+    try {
+      return await firstValueFrom(this.http.get<User[]>(`${this.apiUrl}/agents`));
+    } catch (err) {
+      console.error('Error al obtener agentes activos:', err);
+      return [];
+    }
+  }
+
   public async getUsers(): Promise<User[]> {
     try {
       return await firstValueFrom(this.http.get<User[]>(`${this.apiUrl}/users`));
@@ -117,6 +126,49 @@ export class AuthService {
     } catch (err) {
       console.error('Error al actualizar usuario:', err);
       return false;
+    }
+  }
+
+  public async adminCreateUser(userData: {
+    nombre: string;
+    email: string;
+    contrasenia: string;
+    rol: 'admin' | 'administrador' | 'concesionaria' | 'agente' | 'cliente';
+    concesionariaId?: string;
+    recibeDolares?: boolean;
+    recibeBolivianos?: boolean;
+  }): Promise<{ success: boolean; message?: string; user?: User }> {
+    try {
+      const response = await firstValueFrom(
+        this.http.post<{ success: boolean; message?: string; user?: User }>(
+          `${this.apiUrl}/users/create`,
+          userData
+        )
+      );
+      return response;
+    } catch (err: any) {
+      console.error('Error al crear usuario por admin:', err);
+      const msg = err?.error?.message || 'Error al crear el usuario en el servidor.';
+      return {
+        success: false,
+        message: Array.isArray(msg) ? msg.join(', ') : msg,
+      };
+    }
+  }
+
+  public async adminDeleteUser(userId: string): Promise<{ success: boolean; message?: string }> {
+    try {
+      const response = await firstValueFrom(
+        this.http.delete<{ success: boolean; message?: string }>(`${this.apiUrl}/users/${userId}`)
+      );
+      return response;
+    } catch (err: any) {
+      console.error('Error al eliminar usuario por admin:', err);
+      const msg = err?.error?.message || 'Error al eliminar el usuario.';
+      return {
+        success: false,
+        message: Array.isArray(msg) ? msg.join(', ') : msg,
+      };
     }
   }
 

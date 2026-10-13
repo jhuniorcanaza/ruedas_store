@@ -57,6 +57,7 @@ let VehiclesService = class VehiclesService {
             maquinariaDetail: true,
             especificaciones: { grupo: true },
             user: true,
+            vendedor: true,
         };
         if (query.search) {
             const searchPattern = (0, typeorm_2.Like)(`%${query.search}%`);
@@ -85,6 +86,7 @@ let VehiclesService = class VehiclesService {
                 maquinariaDetail: true,
                 especificaciones: { grupo: true },
                 user: true,
+                vendedor: true,
             },
             order: { fechaIngreso: 'DESC' },
         });
@@ -98,6 +100,7 @@ let VehiclesService = class VehiclesService {
                 maquinariaDetail: true,
                 especificaciones: { grupo: true },
                 user: true,
+                vendedor: true,
             },
         });
         if (!vehicle) {
@@ -161,18 +164,61 @@ let VehiclesService = class VehiclesService {
         }
         const oldEstado = vehicle.estado;
         const newEstado = updateVehicleDto.estado;
-        if (newEstado === 'vendido' && oldEstado !== 'vendido' && !vehicle.beneficioEntregado && vehicle.userId) {
-            const owner = await this.userRepository.findOne({ where: { id: vehicle.userId } });
-            if (owner && owner.rol === 'agente') {
-                let benefitAmount = 100;
-                const setting = await this.settingRepository.findOne({ where: { clave: 'beneficio_agente' } });
-                if (setting) {
-                    benefitAmount = parseFloat(setting.valor) || 100;
-                }
-                owner.beneficios = Number(owner.beneficios || 0) + benefitAmount;
-                await this.userRepository.save(owner);
-                vehicle.beneficioEntregado = true;
+        if (newEstado === 'vendido' && oldEstado !== 'vendido' && !vehicle.beneficioEntregado) {
+            const finalPrice = Number(updateVehicleDto.precioVenta || vehicle.precio || 0);
+            const comisionTotal = Number((finalPrice * 0.03).toFixed(2));
+            const comisionRetencion = Number((comisionTotal * 0.15).toFixed(2));
+            const fondoAgentes = Number((comisionTotal * 0.85).toFixed(2));
+            const captadorId = vehicle.userId;
+            let vendedorId = updateVehicleDto.vendedorId;
+            if (!vendedorId && user?.id) {
+                vendedorId = user.id;
             }
+            if (!vendedorId) {
+                vendedorId = captadorId;
+            }
+            let comisionCaptador = 0;
+            let comisionVendedor = 0;
+            if (captadorId && vendedorId && captadorId !== vendedorId) {
+                comisionCaptador = Number((fondoAgentes * 0.5).toFixed(2));
+                comisionVendedor = Number((fondoAgentes - comisionCaptador).toFixed(2));
+                const captador = await this.userRepository.findOne({ where: { id: captadorId } });
+                if (captador && (captador.rol === 'agente' || captador.rol === 'concesionaria')) {
+                    captador.beneficios = Number(captador.beneficios || 0) + comisionCaptador;
+                    await this.userRepository.save(captador);
+                }
+                const vendedor = await this.userRepository.findOne({ where: { id: vendedorId } });
+                if (vendedor && (vendedor.rol === 'agente' || vendedor.rol === 'concesionaria')) {
+                    vendedor.beneficios = Number(vendedor.beneficios || 0) + comisionVendedor;
+                    await this.userRepository.save(vendedor);
+                }
+            }
+            else if (captadorId && (!vendedorId || captadorId === vendedorId)) {
+                comisionCaptador = fondoAgentes;
+                comisionVendedor = 0;
+                vendedorId = captadorId;
+                const captador = await this.userRepository.findOne({ where: { id: captadorId } });
+                if (captador && (captador.rol === 'agente' || captador.rol === 'concesionaria')) {
+                    captador.beneficios = Number(captador.beneficios || 0) + fondoAgentes;
+                    await this.userRepository.save(captador);
+                }
+            }
+            else if (vendedorId) {
+                comisionCaptador = 0;
+                comisionVendedor = fondoAgentes;
+                const vendedor = await this.userRepository.findOne({ where: { id: vendedorId } });
+                if (vendedor && (vendedor.rol === 'agente' || vendedor.rol === 'concesionaria')) {
+                    vendedor.beneficios = Number(vendedor.beneficios || 0) + fondoAgentes;
+                    await this.userRepository.save(vendedor);
+                }
+            }
+            vehicle.comisionTotal = comisionTotal;
+            vehicle.comisionRetencion = comisionRetencion;
+            vehicle.comisionCaptador = comisionCaptador;
+            vehicle.comisionVendedor = comisionVendedor;
+            vehicle.vendedorId = vendedorId || null;
+            vehicle.fechaVenta = new Date().toISOString().split('T')[0];
+            vehicle.beneficioEntregado = true;
         }
         const { autoDetail, motoDetail, maquinariaDetail, especificaciones, ...baseData } = updateVehicleDto;
         Object.assign(vehicle, baseData);
@@ -240,6 +286,30 @@ let VehiclesService = class VehiclesService {
         }
         await this.vehicleRepository.remove(vehicle);
         return { message: `Vehículo con id ${id} eliminado exitosamente.` };
+    }
+    async findLiquidations() {
+        return this.vehicleRepository.find({
+            where: { estado: 'vendido' },
+            relations: {
+                user: true,
+                vendedor: true,
+            },
+            order: { fechaVenta: 'DESC' },
+        });
+    }
+    async updateCommissionPayment(id, body) {
+        const vehicle = await this.findOne(id);
+        vehicle.comisionPagada = body.comisionPagada;
+        if (body.comisionPagada) {
+            vehicle.fechaPagoComision = new Date().toISOString().split('T')[0];
+        }
+        else {
+            vehicle.fechaPagoComision = null;
+        }
+        if (body.notasLiquidacion !== undefined) {
+            vehicle.notasLiquidacion = body.notasLiquidacion;
+        }
+        return this.vehicleRepository.save(vehicle);
     }
 };
 exports.VehiclesService = VehiclesService;

@@ -19,45 +19,44 @@ html.dark body {
 }
 
 /* Global Dark Mode Automatic Adaptations */
-html.dark .bg-white {
+html.dark .bg-white,
+html.dark [class*="bg-white"]:not(.bg-transparent):not([class*="bg-transparent"]) {
   background-color: #0f172a !important;
+  color: #f1f5f9;
 }
 
 html.dark .bg-slate-50,
-html.dark .bg-slate-50\/50,
-html.dark .bg-slate-50\/80 {
-  background-color: #020617 !important;
+html.dark [class*="bg-slate-50"]:not(.bg-transparent):not([class*="bg-transparent"]) {
+  background-color: #090d16 !important;
 }
 
-html.dark .bg-slate-100 {
+html.dark .bg-slate-100,
+html.dark [class*="bg-slate-100"]:not(.bg-transparent):not([class*="bg-transparent"]) {
   background-color: #1e293b !important;
-}
-
-html.dark .text-slate-900 {
-  color: #f8fafc !important;
-}
-
-html.dark .text-slate-800 {
-  color: #f1f5f9 !important;
-}
-
-html.dark .text-slate-700 {
-  color: #e2e8f0 !important;
-}
-
-html.dark .text-slate-600 {
   color: #cbd5e1 !important;
 }
 
-html.dark .text-slate-500 {
-  color: #94a3b8 !important;
+html.dark .bg-slate-200,
+html.dark [class*="bg-slate-200"]:not(.bg-transparent):not([class*="bg-transparent"]) {
+  background-color: #334155 !important;
+  color: #f1f5f9 !important;
 }
 
-html.dark .border-slate-100,
-html.dark .border-slate-200,
-html.dark .border-slate-200\/80,
-html.dark .border-slate-200\/50 {
+html.dark [class*="border-slate-100"],
+html.dark [class*="border-slate-200"],
+html.dark [class*="border-slate-300"] {
   border-color: #1e293b !important;
+}
+
+html.dark .text-slate-900,
+html.dark .text-slate-800,
+html.dark .text-slate-700 {
+  color: #f8fafc !important;
+}
+
+html.dark .text-slate-600,
+html.dark .text-slate-500 {
+  color: #94a3b8 !important;
 }
 
 html.dark input[type="text"],
@@ -67,9 +66,14 @@ html.dark input[type="number"],
 html.dark input[type="tel"],
 html.dark select,
 html.dark textarea {
-  background-color: #0f172a !important;
+  background-color: #0b1120 !important;
   color: #f8fafc !important;
-  border-color: #334155 !important;
+  border-color: #1e293b !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #64748b !important;
 }
 
 html.dark table th.bg-slate-50,
@@ -88,12 +92,18 @@ html.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
   border-color: #1e293b !important;
 }
 
-/* Modal and Backdrop overlays in Dark Mode */
+/* Modal and Backdrop overlays in Dark Mode (100% transparent backgrounds) */
+html.dark .bg-transparent,
+html.dark [class*="bg-transparent"] {
+  background-color: transparent !important;
+}
+
 html.dark .bg-white.rounded-2xl,
 html.dark .bg-white.rounded-3xl,
 html.dark .bg-white.rounded-xl {
   background-color: #0f172a !important;
-  border: 1px solid #1e293b;
+  border: 1px solid #1e293b !important;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6) !important;
 }
 
 /* Custom scrollbars and styling tweaks */

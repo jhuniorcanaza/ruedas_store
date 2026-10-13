@@ -167,8 +167,50 @@ import { VehicleCardComponent } from '../../shared/components/vehicle-card/vehic
                   </div>
                 </div>
 
+                <!-- Color -->
+                @if (v.color) {
+                  <div [class]="specPillClass()">
+                    <div class="flex h-7 w-7 items-center justify-center rounded-md shrink-0" [class]="isEV() ? 'bg-emerald-500/10 text-emerald-600' : 'bg-blue-50 text-blue-600'">
+                      <span class="h-3.5 w-3.5 rounded-full border border-slate-300 dark:border-slate-600 shadow-2xs" [style.background-color]="getColorHex(v.color)"></span>
+                    </div>
+                    <div class="min-w-0">
+                      <span class="block text-[9px] uppercase font-bold text-slate-455">Color</span>
+                      <span class="text-xs font-semibold text-slate-900 dark:text-white truncate block leading-tight" [title]="v.color">{{ v.color }}</span>
+                    </div>
+                  </div>
+                }
+
+                <!-- Motor -->
+                @if (v.motor) {
+                  <div [class]="specPillClass()">
+                    <div class="flex h-7 w-7 items-center justify-center rounded-md shrink-0" [class]="isEV() ? 'bg-emerald-500/10 text-emerald-600' : 'bg-blue-50 text-blue-600'">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                    <div class="min-w-0">
+                      <span class="block text-[9px] uppercase font-bold text-slate-455">Motor</span>
+                      <span class="text-xs font-semibold text-slate-900 dark:text-white truncate block leading-tight" [title]="v.motor">{{ v.motor }}</span>
+                    </div>
+                  </div>
+                }
+
                 <!-- Auto Specifics -->
                 @if ((v.categoria === 'autos' || v.categoria === 'autos_electricos') && v.autoDetail) {
+                  @if (v.autoDetail.cilindrada) {
+                    <div [class]="specPillClass()">
+                      <div class="flex h-7 w-7 items-center justify-center rounded-md shrink-0" [class]="isEV() ? 'bg-emerald-500/10 text-emerald-600' : 'bg-blue-50 text-blue-600'">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                      </div>
+                      <div class="min-w-0">
+                        <span class="block text-[9px] uppercase font-bold text-slate-455">Cilindrada</span>
+                        <span class="text-xs font-semibold text-slate-900 dark:text-white truncate block leading-tight">{{ v.autoDetail.cilindrada }} cc</span>
+                      </div>
+                    </div>
+                  }
                   <div [class]="specPillClass()">
                     <div class="flex h-7 w-7 items-center justify-center rounded-md shrink-0" [class]="isEV() ? 'bg-emerald-500/10 text-emerald-600' : 'bg-blue-50 text-blue-600'">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -393,58 +435,59 @@ import { VehicleCardComponent } from '../../shared/components/vehicle-card/vehic
         </div>
       }
 
-      <!-- MODAL: Solicitar Cotización -->
+      <!-- MODAL: Solicitar Cotización (Fondo 100% transparente) -->
       @if (isQuoteModalOpen()) {
-        <div class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div class="w-full max-w-lg bg-white rounded-2xl p-8 shadow-2xl relative">
-            <button (click)="closeQuoteModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+        <div class="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-transparent pointer-events-none">
+          <div class="fixed inset-0 bg-transparent pointer-events-auto" (click)="closeQuoteModal()"></div>
+          <div class="relative z-10 pointer-events-auto w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-[0_25px_70px_rgba(0,0,0,0.22)] border border-slate-200 dark:border-slate-800 animate-fade-in">
+            <button (click)="closeQuoteModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
             
-            <h3 class="font-heading text-2xl font-bold text-slate-900">Solicitar Cotización</h3>
-            <p class="text-xs text-slate-500 mt-1">Completa los campos para recibir una cotización formal de: <strong class="text-slate-700">{{ vehicle()?.nombre }}</strong></p>
+            <h3 class="font-heading text-xl font-extrabold text-slate-900 dark:text-white">Solicitar Cotización</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Completa los campos para recibir una cotización formal de: <strong class="text-slate-800 dark:text-slate-200">{{ vehicle()?.nombre }}</strong></p>
 
             @if (quoteFormSubmitted()) {
-              <div class="mt-6 rounded-lg bg-emerald-50 p-4 text-emerald-800 border border-emerald-100 flex gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+              <div class="mt-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 p-4 text-emerald-800 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/50 flex gap-2.5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
                 <div>
-                  <p class="font-semibold text-sm">¡Cotización enviada!</p>
-                  <p class="text-xs text-emerald-600 mt-0.5">Un asesor de finanzas te contactará vía correo electrónico.</p>
+                  <p class="font-bold text-sm">¡Cotización enviada!</p>
+                  <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">Un asesor de finanzas te contactará a la brevedad.</p>
                 </div>
               </div>
             } @else {
               <form [formGroup]="quoteForm" (ngSubmit)="submitQuote()" class="mt-6 space-y-4">
                 <div>
-                  <label class="block text-xs font-semibold text-slate-600 uppercase">Nombre Completo</label>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Nombre Completo *</label>
                   <input type="text" formControlName="nombre" 
-                         class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                         class="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-3.5 py-2.5 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:border-blue-500 focus:outline-none shadow-2xs"
                          [class.border-red-400]="isQuoteFieldInvalid('nombre')" />
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase">Email</label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Email *</label>
                     <input type="email" formControlName="email" 
-                           class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                           class="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-3.5 py-2.5 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:border-blue-500 focus:outline-none shadow-2xs"
                            [class.border-red-400]="isQuoteFieldInvalid('email')" />
                   </div>
                   <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase">Teléfono</label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Teléfono / WhatsApp *</label>
                     <input type="tel" formControlName="telefono" 
-                           class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                           class="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-3.5 py-2.5 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:border-blue-500 focus:outline-none shadow-2xs"
                            [class.border-red-400]="isQuoteFieldInvalid('telefono')" />
                   </div>
                 </div>
                 <div>
-                  <label class="block text-xs font-semibold text-slate-600 uppercase">Mensaje (Opcional)</label>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Mensaje (Opcional)</label>
                   <textarea formControlName="mensaje" rows="3" 
-                            class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"></textarea>
+                            class="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-3.5 py-2.5 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:border-blue-500 focus:outline-none shadow-2xs"></textarea>
                 </div>
                 <button type="submit" [disabled]="quoteForm.invalid"
-                        class="w-full rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-50 transition-colors">
+                        class="w-full rounded-xl bg-blue-600 px-4 py-3.5 text-sm font-bold text-white hover:bg-blue-500 disabled:opacity-50 transition-colors shadow-md cursor-pointer">
                   Enviar Solicitud
                 </button>
               </form>
@@ -453,59 +496,60 @@ import { VehicleCardComponent } from '../../shared/components/vehicle-card/vehic
         </div>
       }
 
-      <!-- MODAL: Reservar Unidad (Simulación) -->
+      <!-- MODAL: Reservar Unidad (Fondo 100% transparente) -->
       @if (isReserveModalOpen()) {
-        <div class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div class="w-full max-w-md bg-white rounded-2xl p-8 shadow-2xl relative">
-            <button (click)="closeReserveModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+        <div class="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-transparent pointer-events-none">
+          <div class="fixed inset-0 bg-transparent pointer-events-auto" (click)="closeReserveModal()"></div>
+          <div class="relative z-10 pointer-events-auto w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-[0_25px_70px_rgba(0,0,0,0.22)] border border-slate-200 dark:border-slate-800 animate-fade-in">
+            <button (click)="closeReserveModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
 
-            <h3 class="font-heading text-2xl font-bold text-slate-900">Reservar Unidad</h3>
-            <p class="text-xs text-slate-500 mt-1">Separa este vehículo abonando un pago inicial simulado.</p>
+            <h3 class="font-heading text-xl font-extrabold text-slate-900 dark:text-white">Reservar Unidad</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Separa este vehículo abonando un pago inicial simulado.</p>
 
             @if (reserveFinished()) {
-              <div class="mt-6 rounded-lg bg-emerald-50 p-4 text-emerald-800 border border-emerald-100 flex gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+              <div class="mt-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 p-4 text-emerald-800 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/50 flex gap-2.5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
                 <div>
-                  <p class="font-semibold text-sm">¡Unidad Reservada!</p>
-                  <p class="text-xs text-emerald-600 mt-0.5">El estado del vehículo ha cambiado a 'Reservado' en el inventario.</p>
+                  <p class="font-bold text-sm">¡Unidad Reservada!</p>
+                  <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">El estado del vehículo ha cambiado a 'Reservado' en el inventario.</p>
                 </div>
               </div>
             } @else {
-              <div class="mt-6 border border-slate-200/80 rounded-xl p-4 bg-slate-50 space-y-2 text-xs">
+              <div class="mt-6 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 bg-slate-50 dark:bg-slate-800/40 space-y-2 text-xs">
                 <div class="flex justify-between font-medium">
-                  <span class="text-slate-500">Modelo:</span>
-                  <span class="text-slate-800 font-bold">{{ vehicle()?.nombre }}</span>
+                  <span class="text-slate-500 dark:text-slate-400">Modelo:</span>
+                  <span class="text-slate-800 dark:text-white font-bold">{{ vehicle()?.nombre }}</span>
                 </div>
                 <div class="flex justify-between font-medium">
-                  <span class="text-slate-500">Monto de Reserva:</span>
-                  <span class="text-slate-800 font-extrabold text-sm">$500.00 USD</span>
+                  <span class="text-slate-500 dark:text-slate-400">Monto de Reserva:</span>
+                  <span class="text-slate-900 dark:text-white font-extrabold text-sm">$500.00 USD</span>
                 </div>
-                <p class="text-[10px] text-slate-400 mt-2 text-justify">Este pago inicial de $500 USD garantiza que la unidad sea bloqueada de la venta pública por 48 horas mientras se realiza el papeleo oficial.</p>
+                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-2 text-justify">Este pago inicial de $500 USD garantiza que la unidad sea bloqueada de la venta pública por 48 horas mientras se realiza el papeleo oficial.</p>
               </div>
 
               <!-- Payment Method Mock selection -->
               <div class="mt-6">
-                <label class="block text-xs font-semibold text-slate-600 uppercase">Selecciona Método de Pago</label>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Selecciona Método de Pago</label>
                 <div class="mt-2.5 space-y-2">
-                  <label class="flex items-center gap-2.5 rounded-lg border border-slate-200 p-3 text-xs text-slate-700 cursor-pointer hover:bg-slate-50">
+                  <label class="flex items-center gap-2.5 rounded-xl border border-slate-200 dark:border-slate-800 p-3 text-xs text-slate-700 dark:text-slate-300 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
                     <input type="radio" name="payment" value="visa" checked class="text-blue-600" />
-                    <span>Tarjeta de Crédito / Débito (Simulado)</span>
+                    <span class="font-semibold">Tarjeta de Crédito / Débito (Simulado)</span>
                   </label>
-                  <label class="flex items-center gap-2.5 rounded-lg border border-slate-200 p-3 text-xs text-slate-700 cursor-pointer hover:bg-slate-50">
+                  <label class="flex items-center gap-2.5 rounded-xl border border-slate-200 dark:border-slate-800 p-3 text-xs text-slate-700 dark:text-slate-300 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
                     <input type="radio" name="payment" value="transfer" class="text-blue-600" />
-                    <span>Transferencia Bancaria (Simulado)</span>
+                    <span class="font-semibold">Transferencia Bancaria (Simulado)</span>
                   </label>
                 </div>
               </div>
 
               <button (click)="confirmReservation()"
-                      class="mt-6 w-full rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-500 transition-colors">
+                      class="mt-6 w-full rounded-xl bg-blue-600 px-4 py-3.5 text-sm font-bold text-white hover:bg-blue-500 transition-colors shadow-md cursor-pointer">
                 Confirmar Reserva Simulada ($500)
               </button>
             }
@@ -526,6 +570,23 @@ export class DetailComponent implements OnInit {
   private readonly reservationService = inject(ReservationService);
   protected readonly fb = inject(FormBuilder);
   protected readonly getCategoryLabel = getCategoryLabel;
+
+  protected getColorHex(colorName?: string): string {
+    const c = (colorName || '').trim().toLowerCase();
+    if (c.includes('blanco perla')) return '#F1F5F9';
+    if (c.includes('blanco')) return '#FFFFFF';
+    if (c.includes('negro')) return '#111827';
+    if (c.includes('rojo')) return '#DC2626';
+    if (c.includes('azul marino')) return '#1E3A8A';
+    if (c.includes('azul')) return '#2563EB';
+    if (c.includes('grafito') || c.includes('plomo')) return '#475569';
+    if (c.includes('gris') || c.includes('plata')) return '#94A3B8';
+    if (c.includes('verde')) return '#16A34A';
+    if (c.includes('amarillo')) return '#EAB308';
+    if (c.includes('naranja')) return '#EA580C';
+    if (c.includes('cafe') || c.includes('café') || c.includes('bronce')) return '#78350F';
+    return '#94A3B8';
+  }
 
   protected readonly isEV = computed(() => {
     const v = this.vehicle();

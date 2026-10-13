@@ -9,6 +9,9 @@ export class SpecificationGroup {
   @Column({ unique: true })
   nombre: string;
 
+  @Column({ type: 'varchar', length: 50, default: 'todos' })
+  categoriaVehiculo: string;
+
   @OneToMany(() => Specification, (spec) => spec.grupo, { cascade: true })
   especificaciones: Specification[];
 }

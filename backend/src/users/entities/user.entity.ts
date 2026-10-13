@@ -36,6 +36,9 @@ export class User {
   @Column({ type: 'boolean', default: true })
   recibeBolivianos: boolean;
 
+  @Column({ type: 'boolean', default: true })
+  activo: boolean;
+
   @OneToMany(() => Reservation, (reservation) => reservation.user)
   reservas: Reservation[];
 

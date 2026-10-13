@@ -19,6 +19,8 @@ class CreateVehicleDto {
     precio;
     moneda;
     categoria;
+    color;
+    motor;
     tipoCombustible;
     transmision;
     kilometraje;
@@ -65,6 +67,16 @@ __decorate([
     (0, class_validator_1.IsEnum)(['autos', 'autos_electricos', 'motos', 'motos_electricos', 'maquinaria_agricola', 'transporte_pesado', 'maquinaria'], { message: 'La categoría no es válida' }),
     __metadata("design:type", String)
 ], CreateVehicleDto.prototype, "categoria", void 0);
+__decorate([
+    (0, class_validator_1.IsString)({ message: 'El color debe ser un texto' }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateVehicleDto.prototype, "color", void 0);
+__decorate([
+    (0, class_validator_1.IsString)({ message: 'La descripción del motor debe ser un texto' }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateVehicleDto.prototype, "motor", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'El tipo de combustible es requerido' }),
     __metadata("design:type", String)

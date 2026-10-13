@@ -16,6 +16,7 @@ let Specification = class Specification {
     id;
     nombre;
     grupoId;
+    categoriaVehiculo;
     grupo;
 };
 exports.Specification = Specification;
@@ -31,6 +32,10 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
 ], Specification.prototype, "grupoId", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 50, default: 'todos' }),
+    __metadata("design:type", String)
+], Specification.prototype, "categoriaVehiculo", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => specification_group_entity_1.SpecificationGroup, (group) => group.especificaciones, { onDelete: 'CASCADE' }),
     (0, typeorm_1.JoinColumn)({ name: 'grupoId' }),

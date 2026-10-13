@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const login_dto_1 = require("./dto/login.dto");
 const register_dto_1 = require("./dto/register.dto");
+const admin_create_user_dto_1 = require("./dto/admin-create-user.dto");
 const jwt_auth_guard_1 = require("./guards/jwt-auth.guard");
 const roles_guard_1 = require("./guards/roles.guard");
 const roles_decorator_1 = require("./decorators/roles.decorator");
@@ -37,6 +38,9 @@ let AuthController = class AuthController {
     async findConcesionarias() {
         return this.authService.findConcesionarias();
     }
+    async findActiveAgents() {
+        return this.authService.findActiveAgents();
+    }
     async getBeneficioSetting() {
         return this.authService.getBeneficioSetting();
     }
@@ -46,8 +50,17 @@ let AuthController = class AuthController {
     async findAllUsers() {
         return this.authService.findAllUsers();
     }
+    async adminCreateUser(createUserDto) {
+        return this.authService.adminCreateUser(createUserDto);
+    }
+    async adminCreateUserAlias(createUserDto) {
+        return this.authService.adminCreateUser(createUserDto);
+    }
     async adminUpdateUser(id, updateData) {
         return this.authService.adminUpdateUser(id, updateData);
+    }
+    async adminDeleteUser(id) {
+        return this.authService.adminDeleteUser(id);
     }
 };
 exports.AuthController = AuthController;
@@ -80,6 +93,13 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "findConcesionarias", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('agents'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "findActiveAgents", null);
+__decorate([
     (0, common_1.Get)('settings/beneficio'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -105,6 +125,24 @@ __decorate([
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)('admin', 'administrador'),
+    (0, common_1.Post)('users/create'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [admin_create_user_dto_1.AdminCreateUserDto]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "adminCreateUser", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)('admin', 'administrador'),
+    (0, common_1.Post)('users'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [admin_create_user_dto_1.AdminCreateUserDto]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "adminCreateUserAlias", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)('admin', 'administrador'),
     (0, common_1.Patch)('users/:id/admin-update'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
@@ -112,6 +150,15 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "adminUpdateUser", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)('admin', 'administrador'),
+    (0, common_1.Delete)('users/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "adminDeleteUser", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])

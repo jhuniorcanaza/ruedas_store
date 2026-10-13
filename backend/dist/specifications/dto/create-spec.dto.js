@@ -9,27 +9,77 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateSpecificationDto = exports.CreateGroupDto = void 0;
+exports.UpdateSpecificationDto = exports.CreateSpecificationDto = exports.UpdateGroupDto = exports.CreateGroupDto = void 0;
 const class_validator_1 = require("class-validator");
 class CreateGroupDto {
     nombre;
+    categoriaVehiculo;
 }
 exports.CreateGroupDto = CreateGroupDto;
 __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'El nombre del grupo es requerido' }),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateGroupDto.prototype, "nombre", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateGroupDto.prototype, "categoriaVehiculo", void 0);
+class UpdateGroupDto {
+    nombre;
+    categoriaVehiculo;
+}
+exports.UpdateGroupDto = UpdateGroupDto;
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UpdateGroupDto.prototype, "nombre", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UpdateGroupDto.prototype, "categoriaVehiculo", void 0);
 class CreateSpecificationDto {
     nombre;
     grupoId;
+    categoriaVehiculo;
 }
 exports.CreateSpecificationDto = CreateSpecificationDto;
 __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'El nombre de la especificación es requerido' }),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateSpecificationDto.prototype, "nombre", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)({}, { message: 'El ID de grupo debe ser un número' }),
     __metadata("design:type", Number)
 ], CreateSpecificationDto.prototype, "grupoId", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateSpecificationDto.prototype, "categoriaVehiculo", void 0);
+class UpdateSpecificationDto {
+    nombre;
+    grupoId;
+    categoriaVehiculo;
+}
+exports.UpdateSpecificationDto = UpdateSpecificationDto;
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UpdateSpecificationDto.prototype, "nombre", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)({}, { message: 'El ID de grupo debe ser un número' }),
+    __metadata("design:type", Number)
+], UpdateSpecificationDto.prototype, "grupoId", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UpdateSpecificationDto.prototype, "categoriaVehiculo", void 0);
 //# sourceMappingURL=create-spec.dto.js.map

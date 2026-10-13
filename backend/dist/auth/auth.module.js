@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const user_entity_1 = require("../users/entities/user.entity");
 const setting_entity_1 = require("../users/entities/setting.entity");
+const vehicle_entity_1 = require("../vehicles/entities/vehicle.entity");
 const auth_service_1 = require("./auth.service");
 const auth_controller_1 = require("./auth.controller");
 const jwt_1 = require("@nestjs/jwt");
@@ -23,7 +24,7 @@ exports.AuthModule = AuthModule;
 exports.AuthModule = AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, setting_entity_1.Setting]),
+            typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, setting_entity_1.Setting, vehicle_entity_1.Vehicle]),
             passport_1.PassportModule,
             jwt_1.JwtModule.registerAsync({
                 imports: [config_1.ConfigModule],

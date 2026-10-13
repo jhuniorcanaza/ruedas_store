@@ -25,6 +25,7 @@ let User = class User {
     beneficios;
     recibeDolares;
     recibeBolivianos;
+    activo;
     reservas;
     favoritos;
     vehiculos;
@@ -71,6 +72,10 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'boolean', default: true }),
     __metadata("design:type", Boolean)
 ], User.prototype, "recibeBolivianos", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'boolean', default: true }),
+    __metadata("design:type", Boolean)
+], User.prototype, "activo", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => reservation_entity_1.Reservation, (reservation) => reservation.user),
     __metadata("design:type", Array)

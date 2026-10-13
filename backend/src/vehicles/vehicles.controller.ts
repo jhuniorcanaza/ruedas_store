@@ -48,6 +48,23 @@ export class VehiclesController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin', 'administrador')
+  @Get('admin/liquidations')
+  async findLiquidations() {
+    return this.vehiclesService.findLiquidations();
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin', 'administrador')
+  @Patch(':id/pago-comision')
+  async updateCommissionPayment(
+    @Param('id') id: string,
+    @Body() body: { comisionPagada: boolean; notasLiquidacion?: string }
+  ) {
+    return this.vehiclesService.updateCommissionPayment(id, body);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'cliente', 'administrador', 'concesionaria', 'agente')
   @Delete(':id')
   async remove(@Param('id') id: string, @Request() req: any) {

@@ -12,6 +12,7 @@ export declare class User {
     beneficios: number;
     recibeDolares: boolean;
     recibeBolivianos: boolean;
+    activo: boolean;
     reservas: Reservation[];
     favoritos: Favorite[];
     vehiculos: Vehicle[];

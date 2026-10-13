@@ -4,11 +4,12 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VehicleService } from '../../../core/services/vehicle.service';
 import { Vehicle, getCategoryLabel } from '../../../core/models/vehicle.model';
+import { SaleClosureModalComponent } from '../../../shared/components/sale-closure-modal/sale-closure-modal.component';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, CurrencyPipe],
+  imports: [CommonModule, RouterLink, FormsModule, CurrencyPipe, SaleClosureModalComponent],
   template: `
     <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 fade-in">
       
@@ -141,15 +142,21 @@ import { Vehicle, getCategoryLabel } from '../../../core/models/vehicle.model';
                     </button>
                   </td>
 
-                  <!-- Status Select -->
+                  <!-- Status Select & Commission -->
                   <td class="whitespace-nowrap px-6 py-4">
                     <select [ngModel]="v.estado" (ngModelChange)="changeStatus(v.id, $event)"
-                            class="rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-semibold focus:outline-none transition-colors shadow-sm"
+                            class="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-2.5 py-1 text-xs font-semibold focus:outline-none transition-colors shadow-2xs cursor-pointer"
                             [class]="statusSelectClass(v.estado)">
                       <option value="disponible">Disponible</option>
                       <option value="reservado">Reservado</option>
                       <option value="vendido">Vendido</option>
                     </select>
+
+                    @if (v.estado === 'vendido' && v.comisionTotal) {
+                      <div class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 mt-1">
+                        Comisión 3%: {{ v.comisionTotal | currency:(v.moneda || 'USD'):((v.moneda || 'USD') === 'BOB' ? 'Bs. ' : '$'):'1.0-0' }}
+                      </div>
+                    }
                   </td>
 
                   <!-- Actions buttons -->
@@ -239,6 +246,15 @@ import { Vehicle, getCategoryLabel } from '../../../core/models/vehicle.model';
 
       </div>
     }
+
+    <!-- MODAL DE CIERRE DE VENTA Y LIQUIDACIÓN -->
+    <app-sale-closure-modal
+      [isOpen]="saleTarget() !== null"
+      [vehicle]="saleTarget()"
+      [isSubmitting]="isSaleSubmitting()"
+      (cancel)="closeSaleModal()"
+      (confirmed)="handleSaleConfirmed($event)">
+    </app-sale-closure-modal>
   `
 })
 export class AdminDashboardComponent {
@@ -249,6 +265,10 @@ export class AdminDashboardComponent {
   protected readonly deleteTarget = signal<{ id: string; name: string } | null>(null);
   protected readonly isDeleting = signal(false);
   protected readonly toast = signal<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  // Sale Modal state
+  protected readonly saleTarget = signal<Vehicle | null>(null);
+  protected readonly isSaleSubmitting = signal(false);
 
   protected readonly allVehicles = this.vehicleService.vehicles;
 
@@ -283,11 +303,51 @@ export class AdminDashboardComponent {
   }
 
   protected async changeStatus(id: string, newStatus: 'disponible' | 'reservado' | 'vendido'): Promise<void> {
+    if (newStatus === 'vendido') {
+      const v = this.allVehicles().find(x => x.id === id);
+      if (v && !v.beneficioEntregado) {
+        this.saleTarget.set(v);
+        return;
+      }
+    }
+
     try {
       await this.vehicleService.updateVehicle(id, { estado: newStatus });
       this.showToast('success', `Estado cambiado a ${newStatus}.`);
     } catch (err: any) {
       this.showToast('error', err.message || 'Error al cambiar estado.');
+    }
+  }
+
+  protected closeSaleModal(): void {
+    if (!this.isSaleSubmitting()) {
+      this.saleTarget.set(null);
+    }
+  }
+
+  protected async handleSaleConfirmed(event: {
+    vehicleId: string;
+    precioVenta: number;
+    vendedorId?: string;
+    isShared: boolean;
+  }): Promise<void> {
+    this.isSaleSubmitting.set(true);
+    try {
+      const payload: any = {
+        estado: 'vendido',
+        precioVenta: event.precioVenta,
+      };
+      if (event.vendedorId) {
+        payload.vendedorId = event.vendedorId;
+      }
+      await this.vehicleService.updateVehicle(event.vehicleId, payload);
+      this.saleTarget.set(null);
+      this.showToast('success', '¡Venta registrada con éxito y comisiones liquidadas!');
+    } catch (err: any) {
+      console.error('Error al registrar venta:', err);
+      this.showToast('error', err.message || 'Error al procesar la venta.');
+    } finally {
+      this.isSaleSubmitting.set(false);
     }
   }
 

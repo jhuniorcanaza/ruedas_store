@@ -87,4 +87,27 @@ export class VehicleService {
       throw new Error(message);
     }
   }
+
+  public async getLiquidations(): Promise<Vehicle[]> {
+    try {
+      return await firstValueFrom(this.http.get<Vehicle[]>(`${this.apiUrl}/admin/liquidations`));
+    } catch (err) {
+      console.error('Error al obtener liquidaciones:', err);
+      return [];
+    }
+  }
+
+  public async updateCommissionPayment(id: string, comisionPagada: boolean, notasLiquidacion?: string): Promise<boolean> {
+    try {
+      await firstValueFrom(this.http.patch<Vehicle>(`${this.apiUrl}/${id}/pago-comision`, {
+        comisionPagada,
+        notasLiquidacion
+      }));
+      await this.refreshVehicles();
+      return true;
+    } catch (err) {
+      console.error('Error al actualizar estado de pago de comisión:', err);
+      return false;
+    }
+  }
 }

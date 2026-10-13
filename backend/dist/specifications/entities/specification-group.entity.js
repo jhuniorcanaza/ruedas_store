@@ -15,6 +15,7 @@ const specification_entity_1 = require("./specification.entity");
 let SpecificationGroup = class SpecificationGroup {
     id;
     nombre;
+    categoriaVehiculo;
     especificaciones;
 };
 exports.SpecificationGroup = SpecificationGroup;
@@ -26,6 +27,10 @@ __decorate([
     (0, typeorm_1.Column)({ unique: true }),
     __metadata("design:type", String)
 ], SpecificationGroup.prototype, "nombre", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 50, default: 'todos' }),
+    __metadata("design:type", String)
+], SpecificationGroup.prototype, "categoriaVehiculo", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => specification_entity_1.Specification, (spec) => spec.grupo, { cascade: true }),
     __metadata("design:type", Array)

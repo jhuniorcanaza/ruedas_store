@@ -33,8 +33,20 @@ let SpecificationsController = class SpecificationsController {
     async createGroup(createGroupDto) {
         return this.specsService.createGroup(createGroupDto);
     }
+    async updateGroup(id, updateGroupDto) {
+        return this.specsService.updateGroup(id, updateGroupDto);
+    }
+    async deleteGroup(id) {
+        return this.specsService.deleteGroup(id);
+    }
     async createSpec(createSpecDto) {
         return this.specsService.createSpec(createSpecDto);
+    }
+    async updateSpec(id, updateSpecDto) {
+        return this.specsService.updateSpec(id, updateSpecDto);
+    }
+    async deleteSpec(id) {
+        return this.specsService.deleteSpec(id);
     }
 };
 exports.SpecificationsController = SpecificationsController;
@@ -62,12 +74,50 @@ __decorate([
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)('admin', 'administrador'),
+    (0, common_1.Patch)('groups/:id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, create_spec_dto_1.UpdateGroupDto]),
+    __metadata("design:returntype", Promise)
+], SpecificationsController.prototype, "updateGroup", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)('admin', 'administrador'),
+    (0, common_1.Delete)('groups/:id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], SpecificationsController.prototype, "deleteGroup", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)('admin', 'administrador'),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_spec_dto_1.CreateSpecificationDto]),
     __metadata("design:returntype", Promise)
 ], SpecificationsController.prototype, "createSpec", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)('admin', 'administrador'),
+    (0, common_1.Patch)(':id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, create_spec_dto_1.UpdateSpecificationDto]),
+    __metadata("design:returntype", Promise)
+], SpecificationsController.prototype, "updateSpec", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)('admin', 'administrador'),
+    (0, common_1.Delete)(':id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], SpecificationsController.prototype, "deleteSpec", null);
 exports.SpecificationsController = SpecificationsController = __decorate([
     (0, common_1.Controller)('specifications'),
     __metadata("design:paramtypes", [specifications_service_1.SpecificationsService])

@@ -27,6 +27,8 @@ let Vehicle = class Vehicle {
     precio;
     moneda;
     categoria;
+    color;
+    motor;
     tipoCombustible;
     transmision;
     kilometraje;
@@ -41,6 +43,16 @@ let Vehicle = class Vehicle {
     fechaIngreso;
     telefonoContacto;
     userId;
+    vendedorId;
+    vendedor;
+    comisionTotal;
+    comisionRetencion;
+    comisionCaptador;
+    comisionVendedor;
+    fechaVenta;
+    comisionPagada;
+    fechaPagoComision;
+    notasLiquidacion;
     reservas;
     favoritos;
     autoDetail;
@@ -82,6 +94,14 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 30 }),
     __metadata("design:type", String)
 ], Vehicle.prototype, "categoria", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 50, default: 'Blanco' }),
+    __metadata("design:type", String)
+], Vehicle.prototype, "color", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 100, nullable: true }),
+    __metadata("design:type", String)
+], Vehicle.prototype, "motor", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
@@ -138,6 +158,47 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', nullable: true }),
     __metadata("design:type", Object)
 ], Vehicle.prototype, "userId", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', nullable: true }),
+    __metadata("design:type", Object)
+], Vehicle.prototype, "vendedorId", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, { onDelete: 'SET NULL', nullable: true }),
+    (0, typeorm_1.JoinColumn)({ name: 'vendedorId' }),
+    __metadata("design:type", user_entity_1.User)
+], Vehicle.prototype, "vendedor", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'decimal', precision: 12, scale: 2, default: 0 }),
+    __metadata("design:type", Number)
+], Vehicle.prototype, "comisionTotal", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'decimal', precision: 12, scale: 2, default: 0 }),
+    __metadata("design:type", Number)
+], Vehicle.prototype, "comisionRetencion", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'decimal', precision: 12, scale: 2, default: 0 }),
+    __metadata("design:type", Number)
+], Vehicle.prototype, "comisionCaptador", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'decimal', precision: 12, scale: 2, default: 0 }),
+    __metadata("design:type", Number)
+], Vehicle.prototype, "comisionVendedor", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 20, nullable: true }),
+    __metadata("design:type", Object)
+], Vehicle.prototype, "fechaVenta", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'boolean', default: false }),
+    __metadata("design:type", Boolean)
+], Vehicle.prototype, "comisionPagada", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 20, nullable: true }),
+    __metadata("design:type", Object)
+], Vehicle.prototype, "fechaPagoComision", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", Object)
+], Vehicle.prototype, "notasLiquidacion", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => reservation_entity_1.Reservation, (reservation) => reservation.vehicle),
     __metadata("design:type", Array)

@@ -23,6 +23,14 @@ export class CreateVehicleDto {
   @IsEnum(['autos', 'autos_electricos', 'motos', 'motos_electricos', 'maquinaria_agricola', 'transporte_pesado', 'maquinaria'], { message: 'La categoría no es válida' })
   categoria: 'autos' | 'autos_electricos' | 'motos' | 'motos_electricos' | 'maquinaria_agricola' | 'transporte_pesado' | 'maquinaria';
 
+  @IsString({ message: 'El color debe ser un texto' })
+  @IsOptional()
+  color?: string;
+
+  @IsString({ message: 'La descripción del motor debe ser un texto' })
+  @IsOptional()
+  motor?: string;
+
   @IsNotEmpty({ message: 'El tipo de combustible es requerido' })
   tipoCombustible: string;
 
@@ -70,6 +78,7 @@ export class CreateVehicleDto {
     carroceria: string;
     puertas: number;
     pasajeros: number;
+    cilindrada?: number;
     autonomia?: number;
     tamanoBateria?: number;
   };

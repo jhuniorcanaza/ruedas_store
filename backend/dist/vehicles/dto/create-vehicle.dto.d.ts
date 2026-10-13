@@ -6,6 +6,8 @@ export declare class CreateVehicleDto {
     precio: number;
     moneda?: 'USD' | 'BOB';
     categoria: 'autos' | 'autos_electricos' | 'motos' | 'motos_electricos' | 'maquinaria_agricola' | 'transporte_pesado' | 'maquinaria';
+    color?: string;
+    motor?: string;
     tipoCombustible: string;
     transmision: string;
     kilometraje: number;
@@ -22,6 +24,7 @@ export declare class CreateVehicleDto {
         carroceria: string;
         puertas: number;
         pasajeros: number;
+        cilindrada?: number;
         autonomia?: number;
         tamanoBateria?: number;
     };

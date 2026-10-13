@@ -29,4 +29,9 @@ export declare class VehiclesService {
     remove(id: string, user?: any): Promise<{
         message: string;
     }>;
+    findLiquidations(): Promise<Vehicle[]>;
+    updateCommissionPayment(id: string, body: {
+        comisionPagada: boolean;
+        notasLiquidacion?: string;
+    }): Promise<Vehicle>;
 }

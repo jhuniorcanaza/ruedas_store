@@ -16,6 +16,9 @@ export class AutoDetail {
   pasajeros: number;
 
   @Column({ type: 'int', nullable: true })
+  cilindrada: number | null;
+
+  @Column({ type: 'int', nullable: true })
   autonomia: number | null;
 
   @Column({ type: 'int', nullable: true })

@@ -14,6 +14,8 @@ export declare class Vehicle {
     precio: number;
     moneda: 'USD' | 'BOB';
     categoria: 'autos' | 'autos_electricos' | 'motos' | 'motos_electricos' | 'maquinaria_agricola' | 'transporte_pesado' | 'maquinaria';
+    color: string;
+    motor: string;
     tipoCombustible: string;
     transmision: string;
     kilometraje: number;
@@ -28,6 +30,16 @@ export declare class Vehicle {
     fechaIngreso: string;
     telefonoContacto: string;
     userId: string | null;
+    vendedorId: string | null;
+    vendedor?: User;
+    comisionTotal: number;
+    comisionRetencion: number;
+    comisionCaptador: number;
+    comisionVendedor: number;
+    fechaVenta: string | null;
+    comisionPagada: boolean;
+    fechaPagoComision: string | null;
+    notasLiquidacion: string | null;
     reservas: Reservation[];
     favoritos: Favorite[];
     autoDetail?: AutoDetail;

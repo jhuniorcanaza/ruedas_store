@@ -33,6 +33,12 @@ export class Vehicle {
   @Column({ type: 'varchar', length: 30 })
   categoria: 'autos' | 'autos_electricos' | 'motos' | 'motos_electricos' | 'maquinaria_agricola' | 'transporte_pesado' | 'maquinaria';
 
+  @Column({ type: 'varchar', length: 50, default: 'Blanco' })
+  color: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  motor: string;
+
   @Column()
   tipoCombustible: string;
 
@@ -74,6 +80,37 @@ export class Vehicle {
 
   @Column({ type: 'varchar', nullable: true })
   userId: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  vendedorId: string | null;
+
+  @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
+  @JoinColumn({ name: 'vendedorId' })
+  vendedor?: User;
+
+  @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
+  comisionTotal: number;
+
+  @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
+  comisionRetencion: number;
+
+  @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
+  comisionCaptador: number;
+
+  @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
+  comisionVendedor: number;
+
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  fechaVenta: string | null;
+
+  @Column({ type: 'boolean', default: false })
+  comisionPagada: boolean;
+
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  fechaPagoComision: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  notasLiquidacion: string | null;
 
   @OneToMany(() => Reservation, (reservation) => reservation.vehicle)
   reservas: Reservation[];

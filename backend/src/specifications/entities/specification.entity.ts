@@ -12,6 +12,9 @@ export class Specification {
   @Column()
   grupoId: number;
 
+  @Column({ type: 'varchar', length: 50, default: 'todos' })
+  categoriaVehiculo: string;
+
   @ManyToOne(() => SpecificationGroup, (group) => group.especificaciones, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'grupoId' })
   grupo: SpecificationGroup;

@@ -42,6 +42,12 @@ let VehiclesController = class VehiclesController {
         const user = req.user;
         return this.vehiclesService.update(id, updateVehicleDto, user);
     }
+    async findLiquidations() {
+        return this.vehiclesService.findLiquidations();
+    }
+    async updateCommissionPayment(id, body) {
+        return this.vehiclesService.updateCommissionPayment(id, body);
+    }
     async remove(id, req) {
         const user = req.user;
         return this.vehiclesService.remove(id, user);
@@ -94,6 +100,24 @@ __decorate([
     __metadata("design:paramtypes", [String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], VehiclesController.prototype, "update", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)('admin', 'administrador'),
+    (0, common_1.Get)('admin/liquidations'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], VehiclesController.prototype, "findLiquidations", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)('admin', 'administrador'),
+    (0, common_1.Patch)(':id/pago-comision'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], VehiclesController.prototype, "updateCommissionPayment", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)('admin', 'cliente', 'administrador', 'concesionaria', 'agente'),

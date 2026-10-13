@@ -26,11 +26,15 @@ let SpecificationsService = class SpecificationsService {
         this.groupRepository = groupRepository;
     }
     async createGroup(createGroupDto) {
-        const existing = await this.groupRepository.findOne({ where: { nombre: createGroupDto.nombre } });
+        const nombre = createGroupDto.nombre.trim();
+        const existing = await this.groupRepository.findOne({ where: { nombre } });
         if (existing) {
-            throw new common_1.BadRequestException(`El grupo "${createGroupDto.nombre}" ya existe.`);
+            throw new common_1.BadRequestException(`El grupo "${nombre}" ya existe.`);
         }
-        const group = this.groupRepository.create(createGroupDto);
+        const group = this.groupRepository.create({
+            nombre,
+            categoriaVehiculo: createGroupDto.categoriaVehiculo || 'todos',
+        });
         return this.groupRepository.save(group);
     }
     async findAllGroups() {
@@ -46,15 +50,48 @@ let SpecificationsService = class SpecificationsService {
         }
         return group;
     }
+    async updateGroup(id, updateGroupDto) {
+        const group = await this.findGroupById(id);
+        if (updateGroupDto.nombre && updateGroupDto.nombre.trim() !== group.nombre) {
+            const nombreTrimmed = updateGroupDto.nombre.trim();
+            const existing = await this.groupRepository.findOne({ where: { nombre: nombreTrimmed } });
+            if (existing && existing.id !== id) {
+                throw new common_1.BadRequestException(`Ya existe un grupo con el nombre "${nombreTrimmed}".`);
+            }
+            group.nombre = nombreTrimmed;
+        }
+        if (updateGroupDto.categoriaVehiculo !== undefined) {
+            group.categoriaVehiculo = updateGroupDto.categoriaVehiculo;
+        }
+        return this.groupRepository.save(group);
+    }
+    async deleteGroup(id) {
+        const group = await this.findGroupById(id);
+        const specs = await this.specRepository.find({ where: { grupoId: id } });
+        if (specs.length > 0) {
+            const specIds = specs.map((s) => s.id);
+            try {
+                await this.specRepository.query(`DELETE FROM vehiculo_especificaciones WHERE specificationsId IN (?)`, [specIds]);
+            }
+            catch (e) {
+                console.warn('Advertencia al limpiar vehiculo_especificaciones:', e);
+            }
+            await this.specRepository.remove(specs);
+        }
+        await this.groupRepository.remove(group);
+        return { success: true, message: `Grupo "${group.nombre}" eliminado exitosamente.` };
+    }
     async createSpec(createSpecDto) {
-        await this.findGroupById(createSpecDto.grupoId);
-        const existing = await this.specRepository.findOne({ where: { nombre: createSpecDto.nombre } });
+        const group = await this.findGroupById(createSpecDto.grupoId);
+        const nombre = createSpecDto.nombre.trim();
+        const existing = await this.specRepository.findOne({ where: { nombre } });
         if (existing) {
-            throw new common_1.BadRequestException(`La especificación "${createSpecDto.nombre}" ya existe.`);
+            throw new common_1.BadRequestException(`La especificación "${nombre}" ya existe.`);
         }
         const spec = this.specRepository.create({
-            nombre: createSpecDto.nombre,
+            nombre,
             grupoId: createSpecDto.grupoId,
+            categoriaVehiculo: createSpecDto.categoriaVehiculo || group.categoriaVehiculo || 'todos',
         });
         return this.specRepository.save(spec);
     }
@@ -70,6 +107,36 @@ let SpecificationsService = class SpecificationsService {
             throw new common_1.NotFoundException(`Especificación con id ${id} no encontrada.`);
         }
         return spec;
+    }
+    async updateSpec(id, updateSpecDto) {
+        const spec = await this.findSpecById(id);
+        if (updateSpecDto.nombre && updateSpecDto.nombre.trim() !== spec.nombre) {
+            const nombreTrimmed = updateSpecDto.nombre.trim();
+            const existing = await this.specRepository.findOne({ where: { nombre: nombreTrimmed } });
+            if (existing && existing.id !== id) {
+                throw new common_1.BadRequestException(`Ya existe una especificación con el nombre "${nombreTrimmed}".`);
+            }
+            spec.nombre = nombreTrimmed;
+        }
+        if (updateSpecDto.grupoId !== undefined) {
+            await this.findGroupById(updateSpecDto.grupoId);
+            spec.grupoId = updateSpecDto.grupoId;
+        }
+        if (updateSpecDto.categoriaVehiculo !== undefined) {
+            spec.categoriaVehiculo = updateSpecDto.categoriaVehiculo;
+        }
+        return this.specRepository.save(spec);
+    }
+    async deleteSpec(id) {
+        const spec = await this.findSpecById(id);
+        try {
+            await this.specRepository.query(`DELETE FROM vehiculo_especificaciones WHERE specificationsId = ?`, [id]);
+        }
+        catch (e) {
+            console.warn('Advertencia al limpiar vehiculo_especificaciones para spec:', e);
+        }
+        await this.specRepository.remove(spec);
+        return { success: true, message: `Especificación "${spec.nombre}" eliminada exitosamente.` };
     }
 };
 exports.SpecificationsService = SpecificationsService;
