@@ -11,7 +11,7 @@ export declare class AuthController {
             id: string;
             email: string;
             nombre: string;
-            rol: "agente" | "admin" | "administrador" | "concesionaria" | "cliente";
+            rol: "admin" | "administrador" | "concesionaria" | "agente" | "cliente";
             concesionariaId: string | null;
             beneficios: number;
             recibeDolares: boolean;
@@ -25,7 +25,7 @@ export declare class AuthController {
             id: string;
             email: string;
             nombre: string;
-            rol: "agente" | "admin" | "administrador" | "concesionaria" | "cliente";
+            rol: "admin" | "administrador" | "concesionaria" | "agente" | "cliente";
             concesionariaId: string | null;
             beneficios: number;
             recibeDolares: boolean;
@@ -37,7 +37,7 @@ export declare class AuthController {
         id: string;
         email: string;
         nombre: string;
-        rol: "agente" | "admin" | "administrador" | "concesionaria" | "cliente";
+        rol: "admin" | "administrador" | "concesionaria" | "agente" | "cliente";
         concesionariaId: string | null;
         concesionaria: {
             id: string;
@@ -65,7 +65,7 @@ export declare class AuthController {
             id: string;
             email: string;
             nombre: string;
-            rol: "agente" | "admin" | "administrador" | "concesionaria" | "cliente";
+            rol: "admin" | "administrador" | "concesionaria" | "agente" | "cliente";
             concesionariaId: string | null;
             beneficios: number;
             recibeDolares: boolean;
@@ -80,7 +80,7 @@ export declare class AuthController {
             id: string;
             email: string;
             nombre: string;
-            rol: "agente" | "admin" | "administrador" | "concesionaria" | "cliente";
+            rol: "admin" | "administrador" | "concesionaria" | "agente" | "cliente";
             concesionariaId: string | null;
             beneficios: number;
             recibeDolares: boolean;
